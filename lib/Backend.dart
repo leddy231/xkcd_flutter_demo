@@ -2,10 +2,10 @@ import 'package:http/http.dart' as http;
 import 'dart:convert';
 
 class Comic {
-  int id;
-  String title;
-  DateTime date;
-  String imgUrl;
+  final int id;
+  final String title;
+  final DateTime date;
+  final String imgUrl;
 
   Comic(this.id, this.title, this.date, this.imgUrl);
 
@@ -27,7 +27,7 @@ class Backend {
     final uri = Uri.parse(url);
     final response = await http.get(uri);
     if (response.statusCode == 200) {
-      return json.decode(response.body);
+      return json.decode(response.body) as Map<String, dynamic>;
     }
     throw Exception("JSON Get failed");
   }
