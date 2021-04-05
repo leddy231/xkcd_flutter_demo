@@ -36,7 +36,7 @@ class Backend {
   static String xkcd_end = "info.0.json";
 
   static Future<List<Comic>> getLatestComics([int amount = 10]) async {
-    Map<String, dynamic> json = await jsonGet(xkcd_url + xkcd_end);
+    Map<String, dynamic> json = await jsonGet("https://xkcd.now.sh/?comic=latest");
     Comic first = Comic.fromJson(json);
     List<Comic> returnList = [first];
 
@@ -44,7 +44,7 @@ class Backend {
     amount--;
     id--;
     while (amount > 0 && id >= 0) {
-      json = await jsonGet(xkcd_url + "$id/" + xkcd_end);
+      json = await jsonGet("https://xkcd.now.sh/?comic=$id");
       returnList.add(Comic.fromJson(json));
       amount--;
       id--;

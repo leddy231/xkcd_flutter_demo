@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:xkcd_demo/Backend.dart';
 import 'package:xkcd_demo/ComicCard.dart';
+import 'package:xkcd_demo/FullscreenShrinkingSliver.dart';
 import 'dart:math' as math;
 
 void main() {
@@ -76,14 +77,8 @@ Widget loadingScreen() => Scaffold(
 Widget comicScreen(List<Comic> comics, BuildContext ctx) => Scaffold(
       body: CustomScrollView(
         slivers: [
-          SliverPersistentHeader(
-            delegate: _SliverFullscreenDelegate(
-              minHeight: 410, //uggly hack
-              maxHeight: MediaQuery.of(ctx).size.height,
-              child: Center(
-                child: ComicCard(comics.first),
-              ),
-            ),
+          FullscreenShrinkingSliver(
+            child: ComicCard(comics.first),
           ),
           SliverList(
             delegate: SliverChildListDelegate(
@@ -94,32 +89,3 @@ Widget comicScreen(List<Comic> comics, BuildContext ctx) => Scaffold(
       ),
     );
 
-class _SliverFullscreenDelegate extends SliverPersistentHeaderDelegate {
-  final double minHeight;
-  final double maxHeight;
-  final Widget child;
-
-  _SliverFullscreenDelegate({
-    required this.minHeight,
-    required this.maxHeight,
-    required this.child,
-  });
-
-  @override
-  double get minExtent => minHeight;
-
-  @override
-  double get maxExtent => math.max(maxHeight, minHeight);
-
-  @override
-  Widget build(BuildContext ctx, double shrinkOffset, bool overlapsContent) {
-    return new SizedBox.expand(child: child);
-  }
-
-  @override
-  bool shouldRebuild(_SliverFullscreenDelegate oldDelegate) {
-    return maxHeight != oldDelegate.maxHeight ||
-        minHeight != oldDelegate.minHeight ||
-        child != oldDelegate.child;
-  }
-}
